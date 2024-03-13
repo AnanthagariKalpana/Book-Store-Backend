@@ -20,9 +20,9 @@ const bookSchema = new Schema(
         discountPrice: {
             type: Number
         },
-        admin_user_id: {
-            type: String
-        },
+        // admin_user_id: {
+        //     type: String
+        // },
         bookImage: {
             type: String
         }
@@ -32,4 +32,4 @@ const bookSchema = new Schema(
     }
 );
 
-export default model('User', bookSchema);
+export default model('Book', bookSchema, 'book');
