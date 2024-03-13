@@ -20,9 +20,9 @@ const bookSchema = new Schema(
         discountPrice: {
             type: Number
         },
-        // admin_user_id: {
-        //     type: String
-        // },
+        admin_user_id: {
+            type: String
+        },
         bookImage: {
             type: String
         }
