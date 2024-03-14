@@ -31,11 +31,25 @@ export const getBookById = async (req, res, next) => {
 
   export const sortBookByPrice = async (req, res, next) => {
     try {
-      const data = await BookService.sortBookByPrice();
+      const data = await BookService.sortBookByPrice(req.params.price);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: data,
         message: 'books are sorted'
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  export const searchBook = async (req, res, next) => {
+    try {
+        console.log(req.body);
+      const data = await BookService.searchBook(req.body.bookName);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+        message: 'book searched successFully'
       });
     } catch (error) {
       next(error);

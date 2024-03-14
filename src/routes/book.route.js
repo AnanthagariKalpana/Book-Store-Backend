@@ -6,12 +6,13 @@ const router = express.Router();
 
 //route to get All books
 router.get('', bookController.getAll);
-
-router.get('/sort', bookController.sortBookByPrice)
-
+//route to sort the book by Price//if price==1->ascending,price==-1->descending
+router.get('/sort/:price', bookController.sortBookByPrice);
+//route to search the book
+router.get('/search', bookController.searchBook);
 //route to get book by Id
 router.get('/:_id',bookController.getBookById);
-//route to sort the book by Price
+
 
 
 export default router;
