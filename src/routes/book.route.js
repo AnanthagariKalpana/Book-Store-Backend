@@ -5,13 +5,13 @@ import { userAuth } from '../middlewares/auth.middleware';
 const router = express.Router();
 
 //route to get All books
-router.get('', bookController.getAll);
+router.get('', userAuth, bookController.getAll);
 //route to sort the book by Price//if price==1->ascending,price==-1->descending
-router.get('/sort/:price', bookController.sortBookByPrice);
+router.get('/sort/:price', userAuth, bookController.sortBookByPrice);
 //route to search the book
-router.get('/search', bookController.searchBook);
+router.get('/search',userAuth, bookController.searchBook);
 //route to get book by Id
-router.get('/:_id',bookController.getBookById);
+router.get('/:_id',userAuth ,bookController.getBookById);
 
 
 
