@@ -122,3 +122,77 @@ export const addToCart = async (bookId, userId) => {
         throw new Error("Failed to add to cart");
     }
 };
+
+export const getCart = async (userId) => {
+    try {
+       // console.log(userId);
+      const cart = await Cart.findOne({ userId: userId });
+  
+      if (!cart) {
+        throw new Error("Cart not found for this user");
+      }
+  
+      return cart;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to get cart");
+    }
+  };
+
+
+export const deleteCart = async (userId) => {
+  try {
+    const deletedCart = await Cart.findOneAndDelete({ userId: userId });
+
+    if (!deletedCart) {
+      throw new Error("Cart not found for this user");
+    }
+
+    return deletedCart;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to delete cart");
+  }
+};
+
+
+export const removeCartItem = async (bookId, userId) => {
+    try {
+      const book = await Book.findById(bookId);
+      if (!book) {
+        throw new Error("Book not found");
+      }
+  
+      const cartData = await Cart.findOne({ userId: userId });
+      if (!cartData) {
+        throw new Error("Cart not found");
+      }
+  
+      const cartItemIndex = cartData.bookItems.findIndex(item => item.bookId.toString() === bookId.toString());
+  
+      if (cartItemIndex !== -1) {
+        cartData.total -= cartData.bookItems[cartItemIndex].price;
+  
+        if (cartData.bookItems[cartItemIndex].quantity === 1) {
+          cartData.bookItems.splice(cartItemIndex, 1);
+        } else {
+          cartData.bookItems[cartItemIndex].quantity -= 1;
+        }
+  
+        book.quantity += 1;
+  
+        await book.save();
+        await cartData.save();
+  
+        console.log("Item removed from cart.");
+  
+        return cartData;
+      } else {
+        throw new Error("Item not found in the cart");
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error removing from cart");
+    }
+  };
+
