@@ -6,6 +6,7 @@ const router = express.Router();
 
 //route to add wishList
 router.post('/:_id', userAuth, WishlistController.addWishlist);
+
 //route to get wishList
 router.get('', userAuth, WishlistController.getWishlist);
 

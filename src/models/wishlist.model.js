@@ -27,4 +27,5 @@ const wishlistSchema = new Schema(
   }
 );
 
+
 export default model('Wishlist', wishlistSchema);

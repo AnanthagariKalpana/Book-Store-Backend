@@ -18,6 +18,7 @@ export const addWishlist = async (req, res, next) => {
   }
 };
 
+
 export const getWishlist = async (req, res, next) => {
     try {
       //console.log(req.params._id);
