@@ -1,67 +1,70 @@
 import WishList from "../models/wishlist.model";
 import Book from '../models/book.model';
 
-export const addWishlist=async(bookId, userId)=>{
-try{
-    const book= await Book.findById(bookId);
-    //checking book is present or not
-    if(!book)
-    {
-        throw new Error ("book not found");
-    }
-    //find the user is having the wishlist or not
-     let wishlistData= await WishList.findOne({userId: userId});
-    //if user not have wishlist create it
-     if(!wishlistData)
-     {
-        let data = await WishList.create({
-            userId: userId,
-            bookItems:[
-                {
-                bookId: book._id,
-                bookImage : book.bookImage,
-                bookName: book.bookName,
-                price: book.price
-                }
-            ]
-        });
-        console.log(data);
-        return data;
-     }
-     
-        const wishlistIndex = wishlistData.bookItems.some(item => item.bookId === book._id);
-        //checking book is already in wishlist or not
-        if(wishlistIndex)
-        {//if it is there just pull it and update
-            wishlistData = await WishList.findOneAndUpdate(
-                {userId: userId},{$pull:{bookItems :{bookId:bookId}}},
-                {new : true}
-            );
+export const addWishlist = async (bookId, userId) => {
+    try {
+        const book = await Book.findById(bookId);
+        
+        // Check if the book exists
+        if (!book) {
+            throw new Error("Book not found");
         }
-        //if it is not there then push it to the wishlist
-        else{
+
+        // Check if the user has a wishlist
+        let wishlistData = await WishList.findOne({ userId: userId });
+
+        if (!wishlistData) {
+            // If the user does not have a wishlist, create one
+            const data = await WishList.create({
+                userId: userId,
+                bookItems: [{
+                    bookId: book._id,
+                    bookImage: book.bookImage,
+                    bookName: book.bookName,
+                    price: book.price
+                }]
+            });
+            
+            return data; // Return created wishlist
+        }
+
+        // Check if the book is already in the wishlist
+        const isBookInWishlist = wishlistData.bookItems.some(item => item.bookId === book._id);
+
+        if (isBookInWishlist) {
+            // If the book is already in the wishlist, remove it
             wishlistData = await WishList.findOneAndUpdate(
-                {userId: userId},{
-                    $push:{
-                        bookItems:{
+                { userId: userId },
+                { $pull: { bookItems: { bookId: bookId } } },
+                { new: true }
+            );
+            // Throw a message if needed, here I'm just returning the wishlist data
+            return wishlistData;
+        } else {
+            // If the book is not in the wishlist, add it
+            wishlistData = await WishList.findOneAndUpdate(
+                { userId: userId },
+                {
+                    $push: {
+                        bookItems: {
                             bookId: book._id,
-                            bookImage: book. bookImage,
+                            bookImage: book.bookImage,
                             bookName: book.bookName,
                             price: book.price
                         }
                     }
-                },{new: true}
+                },
+                { new: true }
             );
-            console.log(wishlistData);
-            return wishlistData;
+            
+            return wishlistData; // Return updated wishlist
         }
-    }
-    catch(error)
-    {
+    } catch (error) {
         console.log(error);
-        throw new Error ('Field to add WishList')
+        throw new Error('Failed to add to Wishlist');
     }
 };
+
 
 
 export const getWishlist = async (userId) => {
@@ -77,5 +80,21 @@ export const getWishlist = async (userId) => {
     } catch (error) {
       console.error(error);
       throw new Error("Failed to get wishlist");
+    }
+  }; 
+
+  export const deleteWishlist = async (userId) => {
+    try {
+       // console.log(userId);
+      const like = await WishList.findOneAndDelete({ userId: userId });
+  
+      if (!like) {
+        throw new Error("Wishlist not found for this user");
+      }
+  
+      return like;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to delete wishlist");
     }
   };

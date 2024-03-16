@@ -10,6 +10,9 @@ router.post('/:_id', userAuth, WishlistController.addWishlist);
 //route to get wishList
 router.get('', userAuth, WishlistController.getWishlist);
 
+//router to delete the wishList
+router.delete('/:_id', userAuth, WishlistController.deleteWishlist)
+
 
 
 

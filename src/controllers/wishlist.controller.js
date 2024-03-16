@@ -33,3 +33,18 @@ export const getWishlist = async (req, res, next) => {
       next(error);
     }
   };
+
+  export const deleteWishlist = async (req, res, next) => {
+    try {
+      //console.log(req.params._id);
+      const data = await WishListService.deleteWishlist(req.body.userID);
+      //console.log(data);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+        message: ' WishList removed successfully'
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
