@@ -88,6 +88,7 @@ export const getWishlist = async (userId) => {
       }
   
       return like;
+      
     } catch (error) {
       console.error(error);
       throw new Error("Failed to delete wishlist");

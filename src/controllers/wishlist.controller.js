@@ -42,7 +42,7 @@ export const getWishlist = async (req, res, next) => {
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: data,
-        message: ' WishList deleted successfully'
+        message: ' WishList delete successfully'
       });
     } catch (error) {
       next(error);

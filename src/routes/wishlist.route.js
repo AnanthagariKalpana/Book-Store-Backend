@@ -13,5 +13,4 @@ router.get('', userAuth, WishlistController.getWishlist);
 //router to delete an wishList
 router.delete('/:_id', userAuth, WishlistController.deleteWishlist)
 
-
 export default router;
