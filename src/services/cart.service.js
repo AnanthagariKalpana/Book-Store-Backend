@@ -203,7 +203,7 @@ export const removeCartItem = async (bookId, userId) => {
   export const isPurchase = async (userId) => {
     try {
         const cartData = await Cart.findOne({ userId: userId });
-        console.log(userId);
+        //console.log(userId);
 
         if (!cartData) {
             throw new Error("Cart not found for this user");

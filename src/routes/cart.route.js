@@ -16,6 +16,7 @@ router.delete('', userAuth, cartController.deleteCart);
 //route to remove the cart
 router.delete('/:_id', userAuth, cartController.removeCartItem);
 
+//route to purchase
 router.put('', userAuth,cartController.isPurchase);
 
 

@@ -37,7 +37,7 @@ export const getCart = async (req, res, next) => {
   export const deleteCart = async (req, res, next) => {
     try {
       //console.log("controller....",req.user.userID);
-      const data = await CartService.deleteCart(req.user.userID);
+      const data = await CartService.deleteCart(req.user.id);
       //console.log(data);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
@@ -63,6 +63,7 @@ export const getCart = async (req, res, next) => {
       next(error);
     }
   };
+
 
   export const isPurchase = async (req, res, next) => {
     try {
