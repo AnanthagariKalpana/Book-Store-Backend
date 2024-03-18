@@ -3,7 +3,7 @@
 import { Schema, model } from "mongoose";
 
 const addressSchema = Schema({
-    userid: {
+    userId: {
         type: String
     },
     address:

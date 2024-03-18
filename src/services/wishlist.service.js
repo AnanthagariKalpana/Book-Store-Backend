@@ -29,17 +29,11 @@ export const addWishlist = async (bookId, userId) => {
         }
 
         // Check if the book is already in the wishlist
-        const isBookInWishlist = wishlistData.bookItems.some(item => item.bookId === book._id);
+        const isBookInWishlist = wishlistData.bookItems.some(item => item.bookId.toString() === book._id.toString());
 
         if (isBookInWishlist) {
-            // If the book is already in the wishlist, remove it
-            wishlistData = await WishList.findOneAndUpdate(
-                { userId: userId },
-                { $pull: { bookItems: { bookId: bookId } } },
-                { new: true }
-            );
-            // Throw a message if needed, here I'm just returning the wishlist data
-            return wishlistData;
+            // If the book is already in the wishlist, return a message
+            return { message: "This book is already in your wishlist" };
         } else {
             // If the book is not in the wishlist, add it
             wishlistData = await WishList.findOneAndUpdate(

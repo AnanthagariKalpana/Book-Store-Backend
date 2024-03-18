@@ -67,65 +67,68 @@ import Book from '../models/book.model';
 import Cart from '../models/cart.model';
 
 export const addToCart = async (bookId, userId) => {
-    try {
-        const book = await Book.findById(bookId); // Use findById instead of find
+  try {
+      const book = await Book.findById(bookId); // Use findById instead of find
 
-        if (!book) {
-            throw new Error("Book not found");
-        }
-        if (book.quantity <= 0) {
-            throw new Error("Out of stock");
-        }
+      if (!book) {
+          throw new Error("Book not found");
+      }
+      if (book.quantity <= 0) {
+          throw new Error("Out of stock");
+      }
 
-        let addCart = await Cart.findOne({ userId: userId });
+      let addCart = await Cart.findOne({ userId: userId });
 
-        if (!addCart) {
-            addCart = await Cart.create({
-                userId: userId,
-                bookItems: [
-                    {
-                        bookId: book._id,
-                        bookImage: book.bookImage,
-                        bookName: book.bookName,
-                        price: book.discountPrice,
-                        quantity: 1
-                    }
-                ],
-                total: book.discountPrice
-            });
-        } else {
-            const cartItemIndex = addCart.bookItems.findIndex(item => item.bookId === book._id);
+      if (!addCart) {
+          addCart = await Cart.create({
+              userId: userId,
+              bookItems: [
+                  {
+                      bookId: book._id,
+                      bookImage: book.bookImage,
+                      bookName: book.bookName,
+                      price: book.discountPrice,
+                      quantity: 1
+                  }
+              ],
+              total: book.discountPrice
+          });
+      } else {
+          const cartItem = addCart.bookItems.find(item => item.bookId.toString() === book._id.toString());
 
-            if (cartItemIndex !== -1) {
-                // If the book already exists in the cart, increase its quantity
-                addCart.bookItems[cartItemIndex].quantity += 1;
-            } else {
-                // If the book doesn't exist in the cart, add it as a new item
-                addCart.bookItems.push({
-                    bookId: book._id,
-                    bookImage: book.bookImage,
-                    bookName: book.bookName,
-                    price: book.discountPrice,
-                    quantity: 1
-                });
-            }
+          if (cartItem) {
+              // If the book already exists in the cart, increase its quantity
+              cartItem.quantity += 1;
+          } else {
+              // If the book doesn't exist in the cart, add it as a new item
+              addCart.bookItems.push({
+                  bookId: book._id,
+                  bookImage: book.bookImage,
+                  bookName: book.bookName,
+                  price: book.discountPrice,
+                  quantity: 1
+              });
+          }
 
-            // Update the total by adding the book's discount price
-            addCart.total += book.discountPrice;
-        }
+          // Recalculate the total by iterating through bookItems
+          addCart.total = addCart.bookItems.reduce((total, item) => {
+              return total + (item.price * item.quantity);
+          }, 0);
+      }
 
-        await addCart.save();
+      await addCart.save();
 
-        return addCart;
-    } catch (error) {
-        console.log(error);
-        throw new Error("Failed to add to cart");
-    }
+      return addCart;
+  } catch (error) {
+      console.log(error);
+      throw new Error("Failed to add to cart");
+  }
 };
+
 
 export const getCart = async (userId) => {
     try {
-       // console.log(userId);
+        //console.log(userId);
       const cart = await Cart.findOne({ userId: userId });
   
       if (!cart) {
@@ -142,6 +145,7 @@ export const getCart = async (userId) => {
 
 export const deleteCart = async (userId) => {
   try {
+    console.log("srrvice.....",userId);
     const deletedCart = await Cart.findOneAndDelete({ userId: userId });
 
     if (!deletedCart) {
