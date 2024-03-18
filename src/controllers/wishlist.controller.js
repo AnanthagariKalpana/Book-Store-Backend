@@ -37,12 +37,12 @@ export const getWishlist = async (req, res, next) => {
   export const deleteWishlist = async (req, res, next) => {
     try {
       //console.log(req.params._id);
-      const data = await WishListService.deleteWishlist(req.user.userID);
+      const data = await WishListService.deleteWishlist(req.user.id);
       //console.log(data);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: data,
-        message: ' WishList removed successfully'
+        message: ' WishList deleted successfully'
       });
     } catch (error) {
       next(error);

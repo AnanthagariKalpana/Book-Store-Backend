@@ -1,3 +1,4 @@
+
 import WishList from "../models/wishlist.model";
 import Book from '../models/book.model';
 
@@ -79,7 +80,7 @@ export const getWishlist = async (userId) => {
 
   export const deleteWishlist = async (userId) => {
     try {
-       // console.log(userId);
+       
       const like = await WishList.findOneAndDelete({ userId: userId });
   
       if (!like) {
