@@ -14,7 +14,9 @@ router.get('', userAuth, cartController.getCart);
 router.delete('', userAuth, cartController.deleteCart);
 
 //route to remove the cart
-router.delete('/:_id', userAuth, cartController.removeCartItem)
+router.delete('/:_id', userAuth, cartController.removeCartItem);
+
+router.put('', userAuth,cartController.isPurchase);
 
 
 

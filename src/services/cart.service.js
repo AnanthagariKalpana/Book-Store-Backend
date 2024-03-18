@@ -119,6 +119,7 @@ export const addToCart = async (bookId, userId) => {
       await addCart.save();
 
       return addCart;
+
   } catch (error) {
       console.log(error);
       throw new Error("Failed to add to cart");
@@ -145,7 +146,6 @@ export const getCart = async (userId) => {
 
 export const deleteCart = async (userId) => {
   try {
-    console.log("srrvice.....",userId);
     const deletedCart = await Cart.findOneAndDelete({ userId: userId });
 
     if (!deletedCart) {
@@ -199,4 +199,29 @@ export const removeCartItem = async (bookId, userId) => {
       throw new Error("Error removing from cart");
     }
   };
+
+  export const isPurchase = async (userId) => {
+    try {
+        const cartData = await Cart.findOne({ userId: userId });
+        console.log(userId);
+
+        if (!cartData) {
+            throw new Error("Cart not found for this user");
+        }
+
+        if (cartData.bookItems.length === 0) {
+            throw new Error("Cart is empty");
+        }
+
+        cartData.purchase = true;
+        await cartData.save();
+
+        return cartData;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 
